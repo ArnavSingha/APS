@@ -25,7 +25,7 @@ npm run dev
 npm run build
 ```
 
-The app opens at [http://localhost:5173](http://localhost:5173).
+The app opens at [https://aps007.netlify.app/](https://aps007.netlify.app/).
 
 ## 🏗️ Architecture
 
