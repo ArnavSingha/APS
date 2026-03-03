@@ -1,0 +1,439 @@
+/* =============================================
+   Scan Detail Page
+   ============================================= */
+
+/* Top progress section */
+.scan-detail__progress {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 24px;
+    background: var(--bg-card);
+    margin: 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Step tracker */
+.step-tracker {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 4px;
+}
+
+.step-tracker__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    position: relative;
+}
+
+.step-tracker__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-tertiary);
+    transition: all var(--transition-base);
+    z-index: 1;
+}
+
+.step-tracker__icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.step-tracker__item--active .step-tracker__icon {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: #FFFFFF;
+}
+
+.step-tracker__item--completed .step-tracker__icon {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.step-tracker__label {
+    font-size: var(--font-size-sm);
+    color: var(--text-tertiary);
+    text-align: center;
+    font-weight: var(--font-weight-medium);
+}
+
+.step-tracker__item--active .step-tracker__label {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Connector lines between steps */
+.step-tracker__item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 22px;
+    left: calc(50% + 26px);
+    width: calc(100% - 52px);
+    height: 2px;
+    background: var(--border-color);
+}
+
+.step-tracker__item--active:not(:last-child)::after,
+.step-tracker__item--completed:not(:last-child)::after {
+    background: var(--color-primary);
+}
+
+/* Metadata row */
+.scan-detail__metadata {
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.scan-detail__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 24px;
+    flex: 1;
+    border-right: 1px solid var(--border-color);
+}
+
+.scan-detail__meta-item:last-child {
+    border-right: none;
+}
+
+.scan-detail__meta-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+    font-weight: var(--font-weight-medium);
+    text-transform: capitalize;
+}
+
+.scan-detail__meta-value {
+    font-size: var(--font-size-md);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
+}
+
+.scan-detail__meta-value--teal {
+    color: var(--color-primary);
+}
+
+
+/* ---- Console + Finding Log split ---- */
+.scan-detail__panels {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+/* Console panel (left) */
+.console-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+    background: var(--bg-card);
+    min-width: 0;
+}
+
+.console-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.console-panel__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+}
+
+.console-panel__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+.console-panel__status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+    padding: 4px 12px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+}
+
+.console-panel__status-spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--border-color);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.console-panel__controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.console-panel__control-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.console-panel__control-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+/* Console tabs */
+.console-panel__tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 20px;
+}
+
+.console-panel__tab {
+    padding: 10px 16px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-tertiary);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+    margin-bottom: -1px;
+}
+
+.console-panel__tab:hover {
+    color: var(--text-secondary);
+}
+
+.console-panel__tab--active {
+    color: var(--text-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+/* Console output */
+.console-panel__output {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: var(--font-size-sm);
+    line-height: 1.7;
+    color: var(--text-primary);
+    background: var(--bg-console);
+    color: var(--text-on-console);
+}
+
+.console-log-entry {
+    margin-bottom: 16px;
+}
+
+.console-log-entry:last-child {
+    margin-bottom: 0;
+}
+
+.console-timestamp {
+    color: var(--text-tertiary);
+}
+
+.console-highlight {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-medium);
+}
+
+.console-warn {
+    color: var(--color-high);
+    font-weight: var(--font-weight-medium);
+}
+
+.console-badge {
+    background: rgba(12, 200, 168, 0.15);
+    color: var(--color-primary);
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.console-link {
+    color: var(--color-primary);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Finding panel (right) */
+.finding-panel {
+    width: 340px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+}
+
+.finding-panel__header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+}
+
+.finding-panel__list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+
+/* ---- Bottom status bar ---- */
+.scan-detail__statusbar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 8px 24px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    flex-wrap: wrap;
+}
+
+.statusbar__item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.statusbar__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-primary);
+}
+
+.statusbar__severity {
+    margin-left: auto;
+    display: flex;
+    gap: 16px;
+}
+
+.statusbar__severity-item {
+    font-weight: var(--font-weight-medium);
+}
+
+.statusbar__severity-item--critical {
+    color: var(--color-critical);
+}
+
+.statusbar__severity-item--high {
+    color: var(--color-high);
+}
+
+.statusbar__severity-item--medium {
+    color: var(--color-medium);
+}
+
+.statusbar__severity-item--low {
+    color: var(--color-low);
+}
+
+
+/* ---- Responsive ---- */
+@media (max-width: 1100px) {
+    .scan-detail__panels {
+        flex-direction: column;
+    }
+
+    .finding-panel {
+        width: 100%;
+        min-width: unset;
+        max-height: 400px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .console-panel {
+        border-right: none;
+        min-height: 350px;
+    }
+}
+
+@media (max-width: 900px) {
+    .scan-detail__progress {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+        padding: 16px;
+    }
+
+    .scan-detail__progress>.progress-ring {
+        align-self: center;
+    }
+
+    .step-tracker {
+        overflow-x: auto;
+        gap: 8px;
+    }
+
+    .scan-detail__metadata {
+        flex-wrap: wrap;
+        padding: 0 16px;
+    }
+
+    .scan-detail__meta-item {
+        min-width: 120px;
+        padding: 10px 16px;
+    }
+
+    .scan-detail__statusbar {
+        padding: 8px 16px;
+        gap: 12px;
+    }
+}
