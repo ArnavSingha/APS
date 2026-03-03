@@ -158,29 +158,33 @@
     align-items: center;
     justify-content: center;
     padding: 40px;
-    background: var(--bg-primary);
+    background: #1a1a2e;
 }
 
 [data-theme="light"] .login-right {
-    background: #FFFFFF;
+    background: #f0f0f5;
 }
 
 .login-card {
     width: 100%;
-    max-width: 380px;
+    max-width: 400px;
+    background: #FFFFFF;
+    border-radius: var(--radius-xl);
+    padding: 36px 32px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 .login-card__title {
     font-size: var(--font-size-2xl);
     font-weight: var(--font-weight-bold);
-    color: var(--text-primary);
+    color: #111111;
     text-align: center;
     margin-bottom: 6px;
 }
 
 .login-card__subtitle {
     text-align: center;
-    color: var(--text-secondary);
+    color: #555555;
     font-size: var(--font-size-md);
     margin-bottom: 28px;
 }
@@ -218,16 +222,16 @@
 .login-form__input {
     width: 100%;
     padding: 13px 16px;
-    border: 1px solid var(--border-color);
+    border: 1px solid #E2E2E2;
     border-radius: var(--radius-lg);
     font-size: var(--font-size-md);
-    color: var(--text-primary);
-    background: var(--bg-input);
+    color: #111111;
+    background: #F8F8FA;
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .login-form__input::placeholder {
-    color: var(--text-tertiary);
+    color: #999999;
 }
 
 .login-form__input:focus {
@@ -240,7 +244,7 @@
     right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-tertiary);
+    color: #999999;
     cursor: pointer;
     padding: 4px;
     display: flex;
@@ -270,7 +274,7 @@
 
 .login-form__terms-text {
     font-size: var(--font-size-sm);
-    color: var(--text-secondary);
+    color: #555555;
     line-height: 1.5;
 }
 
@@ -316,12 +320,12 @@
 .login-card__divider-line {
     flex: 1;
     height: 1px;
-    background: var(--border-color);
+    background: #E2E2E2;
 }
 
 .login-card__divider-text {
     font-size: var(--font-size-xs);
-    color: var(--text-tertiary);
+    color: #999999;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     white-space: nowrap;
@@ -359,13 +363,13 @@
 }
 
 .login-card__social-btn--google {
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
+    background: #F8F8FA;
+    border: 1px solid #E2E2E2;
+    color: #111111;
 }
 
 .login-card__social-btn--meta {
-    background: #000000;
+    background: #1A1A1A;
     color: #FFFFFF;
 }
 

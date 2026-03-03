@@ -5,7 +5,7 @@ import './Sidebar.css';
 const navItems = [
     { label: 'Dashboard', path: '/dashboard', icon: 'dashboard' },
     { label: 'Projects', path: '#', icon: 'projects' },
-    { label: 'Scans', path: '#', icon: 'scans' },
+    { label: 'Scans', path: '/scan/scan-001', icon: 'scans', matchPrefix: '/scan' },
     { label: 'Schedule', path: '#', icon: 'schedule' },
 ];
 
@@ -67,8 +67,11 @@ function Sidebar({ isOpen, onClose }) {
     const location = useLocation();
     const { theme, toggleTheme } = useTheme();
 
-    const isActive = (path) => {
+    const isActive = (path, matchPrefix) => {
         if (path === '#') return false;
+        if (matchPrefix) {
+            return location.pathname.startsWith(matchPrefix);
+        }
         return location.pathname === path || location.pathname.startsWith(path + '/');
     };
 
@@ -94,7 +97,7 @@ function Sidebar({ isOpen, onClose }) {
                             <NavLink
                                 key={item.label}
                                 to={item.path}
-                                className={`sidebar__link ${isActive(item.path) ? 'sidebar__link--active' : ''}`}
+                                className={`sidebar__link ${isActive(item.path, item.matchPrefix) ? 'sidebar__link--active' : ''}`}
                                 onClick={onClose}
                             >
                                 <span className="sidebar__link-icon">{icons[item.icon]}</span>

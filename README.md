@@ -85,3 +85,13 @@ src/
 - **Desktop** (> 900px) — Full sidebar + content layout
 - **Tablet** (≤ 900px) — Sidebar collapses to overlay; 2-column stat cards
 - **Mobile** (≤ 480px) — Single-column layout; stacked panels
+
+## ⚠️ Known Limitations
+
+- **No real backend** — All data is hardcoded mock data in `src/data/mockData.js`. No API calls are made.
+- **No authentication** — The login form performs client-side validation only; there is no session management, token storage, or protected routes.
+- **Static scan data** — The scan progress (0%) and step tracker do not advance in real-time; they display a fixed snapshot of a scan in progress.
+- **Sidebar links** — Only Dashboard and Scans are navigable. Other sidebar items (Projects, Schedule, Notifications, Settings, Support) are placeholder links.
+- **Single scan detail** — All scan rows navigate to the same scan detail page (`/scan/scan-001`); there is no unique detail per scan entry.
+- **No form persistence** — Login form data is not stored or validated against a user database.
+- **No i18n** — The application is in English only with no internationalization support.
