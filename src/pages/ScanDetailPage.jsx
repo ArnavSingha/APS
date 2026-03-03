@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import AppLayout from '../components/AppLayout';
 import ProgressRing from '../components/ProgressRing';
 import FindingCard from '../components/FindingCard';
+import { useToast } from '../components/Toast';
 import { activeScanDetail, activityLogs, findings, scanStats } from '../data/mockData';
 import './ScanDetailPage.css';
 
@@ -46,7 +47,6 @@ const stepIcons = {
 
 function renderLogMessage(message) {
     const parts = [];
-    let remaining = message;
     let key = 0;
 
     const patterns = [
@@ -56,7 +56,6 @@ function renderLogMessage(message) {
         { regex: /<link>(.*?)<\/link>/g, className: 'console-link' },
     ];
 
-    // Process all patterns in order of appearance
     const allMatches = [];
     for (const pattern of patterns) {
         let match;
@@ -67,29 +66,26 @@ function renderLogMessage(message) {
                 end: match.index + match[0].length,
                 text: match[1],
                 className: pattern.className,
-                fullMatch: match[0],
             });
         }
     }
 
     allMatches.sort((a, b) => a.start - b.start);
 
-    if (allMatches.length === 0) {
-        return message;
-    }
+    if (allMatches.length === 0) return message;
 
     let lastIndex = 0;
     for (const match of allMatches) {
         if (match.start > lastIndex) {
-            parts.push(remaining.substring(lastIndex, match.start));
+            parts.push(message.substring(lastIndex, match.start));
         }
         parts.push(
             <span key={key++} className={match.className}>{match.text}</span>
         );
         lastIndex = match.end;
     }
-    if (lastIndex < remaining.length) {
-        parts.push(remaining.substring(lastIndex));
+    if (lastIndex < message.length) {
+        parts.push(message.substring(lastIndex));
     }
 
     return parts;
@@ -97,13 +93,8 @@ function renderLogMessage(message) {
 
 function ScanDetailPage() {
     const { id } = useParams();
+    const { addToast } = useToast();
     const [activeTab, setActiveTab] = useState('activity');
-    const [toast, setToast] = useState(null);
-
-    const showToast = (message) => {
-        setToast(message);
-        setTimeout(() => setToast(null), 2500);
-    };
 
     const scan = activeScanDetail;
     const currentStepIdx = scan.steps.indexOf(scan.currentStep);
@@ -111,22 +102,22 @@ function ScanDetailPage() {
     return (
         <AppLayout
             showOrgBar={false}
-            onNewScan={() => showToast('New Scan dialog would open here')}
-            onExportReport={() => showToast('Report export started')}
-            onStopScan={() => showToast('Scan stopped')}
+            onNewScan={() => addToast('New Scan dialog would open here', 'info')}
+            onExportReport={() => addToast('Report export started', 'success')}
+            onStopScan={() => addToast('Scan stopped', 'error')}
         >
             {/* Progress section */}
-            <div className="scan-detail__progress">
+            <div className="scan-detail__progress animate-fade-in">
                 <ProgressRing percent={scan.progressPercent} size={120} strokeWidth={6} />
 
-                <div className="step-tracker">
+                <div className="step-tracker" role="list" aria-label="Scan progress steps">
                     {scan.steps.map((step, idx) => {
                         let stepClass = 'step-tracker__item';
                         if (idx < currentStepIdx) stepClass += ' step-tracker__item--completed';
                         if (idx === currentStepIdx) stepClass += ' step-tracker__item--active';
 
                         return (
-                            <div key={step} className={stepClass}>
+                            <div key={step} className={stepClass} role="listitem" aria-current={idx === currentStepIdx ? 'step' : undefined}>
                                 <div className="step-tracker__icon">
                                     {stepIcons[step]}
                                 </div>
@@ -138,7 +129,7 @@ function ScanDetailPage() {
             </div>
 
             {/* Metadata row */}
-            <div className="scan-detail__metadata">
+            <div className="scan-detail__metadata animate-fade-in">
                 {Object.entries(scan.metadata).map(([key, value]) => {
                     const label = key.replace(/([A-Z])/g, ' $1').trim();
                     const isTeal = key === 'checklists';
@@ -154,26 +145,26 @@ function ScanDetailPage() {
             </div>
 
             {/* Console + Finding Log panels */}
-            <div className="scan-detail__panels">
+            <div className="scan-detail__panels animate-fade-in-up">
                 {/* Live Console */}
                 <div className="console-panel">
                     <div className="console-panel__header">
                         <div className="console-panel__title">
-                            <span className="console-panel__dot" />
+                            <span className="console-panel__dot" aria-hidden="true" />
                             Live Scan Console
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <div className="console-panel__status">
-                                <span className="console-panel__status-spinner" />
+                            <div className="console-panel__status" role="status">
+                                <span className="console-panel__status-spinner" aria-hidden="true" />
                                 Running...
                             </div>
                             <div className="console-panel__controls">
-                                <button className="console-panel__control-btn" aria-label="Minimize" title="Minimize">
+                                <button className="console-panel__control-btn" aria-label="Minimize console" title="Minimize">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <polyline points="6 9 12 15 18 9" />
                                     </svg>
                                 </button>
-                                <button className="console-panel__control-btn" aria-label="Close" title="Close" onClick={() => showToast('Console minimized')}>
+                                <button className="console-panel__control-btn" aria-label="Close console" title="Close" onClick={() => addToast('Console minimized', 'info')}>
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <line x1="18" y1="6" x2="6" y2="18" />
                                         <line x1="6" y1="6" x2="18" y2="18" />
@@ -183,22 +174,28 @@ function ScanDetailPage() {
                         </div>
                     </div>
 
-                    <div className="console-panel__tabs">
+                    <div className="console-panel__tabs" role="tablist" aria-label="Console views">
                         <button
                             className={`console-panel__tab ${activeTab === 'activity' ? 'console-panel__tab--active' : ''}`}
                             onClick={() => setActiveTab('activity')}
+                            role="tab"
+                            aria-selected={activeTab === 'activity'}
+                            id="tab-activity"
                         >
                             Activity Log
                         </button>
                         <button
                             className={`console-panel__tab ${activeTab === 'verification' ? 'console-panel__tab--active' : ''}`}
                             onClick={() => setActiveTab('verification')}
+                            role="tab"
+                            aria-selected={activeTab === 'verification'}
+                            id="tab-verification"
                         >
                             Verification Loops
                         </button>
                     </div>
 
-                    <div className="console-panel__output">
+                    <div className="console-panel__output" role="log" aria-live="polite" aria-labelledby={activeTab === 'activity' ? 'tab-activity' : 'tab-verification'}>
                         {activeTab === 'activity' ? (
                             activityLogs.map((entry, idx) => (
                                 <div key={idx} className="console-log-entry">
@@ -233,7 +230,7 @@ function ScanDetailPage() {
                 {/* Finding Log */}
                 <div className="finding-panel">
                     <div className="finding-panel__header">Finding Log</div>
-                    <div className="finding-panel__list">
+                    <div className="finding-panel__list" role="list" aria-label="Vulnerability findings">
                         {findings.map((finding) => (
                             <FindingCard key={finding.id} finding={finding} />
                         ))}
@@ -242,17 +239,17 @@ function ScanDetailPage() {
             </div>
 
             {/* Bottom status bar */}
-            <div className="scan-detail__statusbar">
+            <div className="scan-detail__statusbar" role="status" aria-label="Scan statistics">
                 <div className="statusbar__item">
-                    <span className="statusbar__dot" />
+                    <span className="statusbar__dot" aria-hidden="true" />
                     Sub-Agents: {scanStats.subAgents}
                 </div>
                 <div className="statusbar__item">
-                    <span className="statusbar__dot" />
+                    <span className="statusbar__dot" aria-hidden="true" />
                     Parallel Executions: {scanStats.parallelExecutions}
                 </div>
                 <div className="statusbar__item">
-                    <span className="statusbar__dot" />
+                    <span className="statusbar__dot" aria-hidden="true" />
                     Operations: {scanStats.operations}
                 </div>
                 <div className="statusbar__severity">
@@ -270,25 +267,6 @@ function ScanDetailPage() {
                     </span>
                 </div>
             </div>
-
-            {/* Toast notification */}
-            {toast && (
-                <div style={{
-                    position: 'fixed',
-                    bottom: '24px',
-                    right: '24px',
-                    background: 'var(--bg-card)',
-                    color: 'var(--text-primary)',
-                    padding: '12px 20px',
-                    borderRadius: 'var(--radius-lg)',
-                    border: '1px solid var(--color-primary)',
-                    boxShadow: 'var(--shadow-lg)',
-                    fontSize: 'var(--font-size-md)',
-                    zIndex: 1000,
-                }}>
-                    {toast}
-                </div>
-            )}
         </AppLayout>
     );
 }
