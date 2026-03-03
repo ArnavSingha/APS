@@ -1,0 +1,26 @@
+.severity-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-sm);
+    min-width: 26px;
+    text-align: center;
+}
+
+.severity-badge--sm {
+    padding: 2px 7px;
+    font-size: var(--font-size-xs);
+    border-radius: var(--radius-sm);
+}
+
+.severity-badge--md {
+    padding: 4px 10px;
+    font-size: var(--font-size-sm);
+}
+
+.severity-badge--lg {
+    padding: 4px 12px;
+    font-size: var(--font-size-md);
+    border-radius: var(--radius-md);
+}
